@@ -38,7 +38,7 @@ class Gym(Base):
     pincode_id = Column(Integer, ForeignKey("pincode.id"))
     pincode_ref = relationship("Pincode", back_populates="gyms")
     users = relationship("User", back_populates="gym")
-
+    
 class User(Base):
     __tablename__ = "user"
     
@@ -47,11 +47,13 @@ class User(Base):
     gym = relationship("Gym", back_populates="users")
     email = Column(String, unique=True, index=True, nullable=False)
     password = Column(String, nullable=False)
+    full_name = Column(String, nullable=False)  # NEW: Mandatory full name
+    member_id = Column(Integer, unique=True, nullable=False)  # NEW: Unique member ID
     address = Column(String)
     district = Column(String)
     state_ut = Column(String)  # state/union territory
-    pincode = Column(String(6))
-    phone = Column(String(15))
+    pincode = Column(String(6), nullable=False)  # UPDATED: Mandatory, exactly 6 digits
+    phone = Column(String(10))  # UPDATED: 10 digits only, can be null
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
     is_member = Column(Boolean, default=True)
     is_trainer = Column(Boolean, default=False)

@@ -91,7 +91,9 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>User</th>
+                        <th>MemberID</th>
+                        <th>Name</th>
+                        <th>Email/UserID</th>
                         <th>Date</th>
                         <th>Shift</th>
                         <th>Time In</th>
@@ -231,8 +233,8 @@
                 manualUserSelect.innerHTML = '<option value="">Select User</option>';
                 
                 allUsers.forEach(user => {
-                    userSelect.innerHTML += `<option value="${user.id}">${user.email}</option>`;
-                    manualUserSelect.innerHTML += `<option value="${user.id}">${user.email}</option>`;
+                    userSelect.innerHTML += `<option value="${user.id}">${user.member_id} - ${user.full_name}</option>`;
+                    manualUserSelect.innerHTML += `<option value="${user.id}">${user.member_id} - ${user.full_name}</option>`;
                 });
             }
         } catch (error) {
@@ -278,6 +280,8 @@
             
             const row = document.createElement('tr');
             row.innerHTML = `
+                <td>${user.member_id || 'N/A'}</td> <!-- NEW -->
+                <td>${user.full_name || 'Unknown'}</td> <!-- NEW -->
                 <td>${user.email || 'Unknown'}</td>
                 <td>${attendance.attendance_date}</td>
                 <td>${shift.name || 'Unknown'}</td>

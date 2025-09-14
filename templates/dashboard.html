@@ -76,6 +76,8 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Member ID</th> <!-- NEW -->
+                                <th>Full Name</th> <!-- NEW -->
                                 <th>Email</th>
                                 <th>Gym ID</th>
                                 <th>Phone</th>
@@ -231,6 +233,8 @@
                     const row = document.createElement('tr');
                     row.innerHTML = `
                         <td>${user.id}</td>
+                        <td>${user.member_id || 'N/A'}</td> <!-- NEW -->
+                        <td>${user.full_name || 'Unknown'}</td> <!-- NEW -->
                         <td>${user.email}</td>
                         <td>${user.gym_id}</td>
                         <td>${user.phone || 'N/A'}</td>

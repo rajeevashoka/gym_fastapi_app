@@ -50,11 +50,13 @@ class Gym(GymBase):
 # User schemas
 class UserBase(BaseModel):
     email: EmailStr
+    full_name: str  # NEW: Mandatory full name
+    member_id: int  # NEW: Unique member ID
     address: Optional[str] = None
     district: Optional[str] = None
     state_ut: Optional[str] = None
-    pincode: Optional[str] = None
-    phone: Optional[str] = None
+    pincode: str  # UPDATED: Mandatory, exactly 6 digits
+    phone: Optional[str] = None  # UPDATED: 10 digits only, can be null
 
 class UserCreate(UserBase):
     password: str

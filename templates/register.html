@@ -17,18 +17,33 @@
             </span>
         </div>
     </div>
+
     <div class="mb-3">
         <label class="form-label">Gym ID</label>
         <input type="number" class="form-control" id="gym_id" required>
     </div>
+
+    <div class="mb-3">
+        <label class="form-label">Full Name *</label>
+        <input type="text" class="form-control" id="full_name" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Member ID *</label>
+        <input type="number" class="form-control" id="member_id" required>
+    </div>
+
     <div class="mb-3">
         <label class="form-label">Phone Number</label>
-        <input type="tel" class="form-control" id="phone">
+        <input type="tel" class="form-control" id="phone" pattern="[0-9]{10}" maxlength="10">
+        <small class="form-text text-muted">10 digits only (optional)</small>
     </div>
+
     <div class="mb-3">
         <label class="form-label">Address</label>
         <textarea class="form-control" id="address" rows="2"></textarea>
     </div>
+
     <div class="row">
         <div class="col-md-6 mb-3">
             <label class="form-label">District</label>
@@ -39,10 +54,13 @@
             <input type="text" class="form-control" id="state_ut">
         </div>
     </div>
-    <div class="mb-4">
-        <label class="form-label">Pincode</label>
-        <input type="text" class="form-control" id="pincode">
+
+    <div class="mb-3">
+        <label class="form-label">Pincode *</label>
+        <input type="text" class="form-control" id="pincode" pattern="[0-9]{6}" maxlength="6" required>
+        <small class="form-text text-muted">Must be exactly 6 digits</small>
     </div>
+
     <button type="submit" class="btn btn-primary w-100 mb-3">Register</button>
     <div class="text-center">
         <p>Already have an account? <a href="/login" class="text-decoration-none">Login here</a></p>
@@ -56,6 +74,8 @@
         const userData = {
             email: document.getElementById('email').value,
             password: document.getElementById('password').value,
+            full_name: document.getElementById('full_name').value, // NEW
+            member_id: parseInt(document.getElementById('member_id').value), // NEW
             gym_id: parseInt(document.getElementById('gym_id').value),
             phone: document.getElementById('phone').value,
             address: document.getElementById('address').value,
@@ -63,7 +83,17 @@
             state_ut: document.getElementById('state_ut').value,
             pincode: document.getElementById('pincode').value
         };
+        // Validate pincode
+        if (userData.pincode.length !== 6 || !/^\d+$/.test(userData.pincode)) {
+            showMessage('warning', 'Pincode must be exactly 6 digits');
+            return;
+        }
 
+        // Validate phone (if provided)
+        if (userData.phone && (userData.phone.length !== 10 || !/^\d+$/.test(userData.phone))) {
+            showMessage('warning', 'Phone number must be exactly 10 digits');
+            return;
+        }
         const submitBtn = event.target.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Registering...';
