@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Dashboard</h4>
+    <button class="btn btn-outline-danger btn-sm" onclick="logout()">Logout</button>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Members</h5>
+                <h2 class="text-primary">0</h2>
+                <p class="text-muted">Total Members</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Trainers</h5>
+                <h2 class="text-success">0</h2>
+                <p class="text-muted">Total Trainers</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <h5 class="card-title">Gyms</h5>
+                <h2 class="text-info">0</h2>
+                <p class="text-muted">Total Gyms</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Recent Activity</h5>
+    </div>
+    <div class="card-body">
+        <p class="text-muted">No recent activity</p>
+    </div>
+</div>
+
+<script>
+    function logout() {
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('verifyEmail');
+        window.location.href = '/login';
+    }
+
+    // Check authentication on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            window.location.href = '/login';
+            return;
+        }
+        
+        // You can fetch user data here
+        fetchUserData(token);
+    });
+
+    async function fetchUserData(token) {
+        try {
+            // Example: Fetch user profile
+            const response = await fetch('/api/v1/users/', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            
+            if (response.ok) {
+                const userData = await response.json();
+                console.log('User data:', userData);
+            }
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    }
+</script>
+{% endblock %}

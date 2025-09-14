@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="messages"></div>
+<h4 class="text-center mb-4">Verify Email</h4>
+<p class="text-center text-muted mb-4">Enter the 6-digit code sent to your email</p>
+
+<form id="verifyForm">
+    <input type="hidden" id="email" value="{{ email }}">
+    <input type="hidden" id="otp" name="otp">
+    
+    <div class="mb-4">
+        <div class="d-flex justify-content-between">
+            {% for i in range(1, 7) %}
+            <input type="text" class="form-control otp-digit mx-1 text-center" 
+            maxlength="1" id="digit{{ i }}" 
+            style="width: 45px; height: 60px; font-size: 24px;">
+            {% endfor %}
+        </div>
+    </div>
+    <button type="button" class="btn btn-primary w-100 mb-3" onclick="verifyOtp()">Verify OTP</button>
+    
+    <div class="text-center">
+        <p>Didn't receive the code? 
+            <a href="#" onclick="resendOtp()" class="text-decoration-none">Resend OTP</a>
+        </p>
+        <p>Wrong email? 
+            <a href="/register" class="text-decoration-none">Go back to registration</a>
+        </p>
+    </div>
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const email = localStorage.getItem('verifyEmail') || '';
+        document.getElementById('email').value = email;
+        
+        // Focus on first OTP input
+        const firstInput = document.getElementById('digit1');
+        if (firstInput) firstInput.focus();
+        
+        // Add event listeners to all OTP inputs
+        const inputs = document.querySelectorAll('.otp-digit');
+        inputs.forEach((input, index) => {
+            // Remove any existing inline event handlers
+            input.oninput = null;
+            input.onkeyup = null;
+            
+            input.addEventListener('input', function(e) {
+                // Allow only digits
+                this.value = this.value.replace(/\D/g, '');
+                
+                // Auto-tab to next input
+                if (this.value.length === 1 && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                    inputs[index + 1].select();
+                }
+                
+                // Auto-submit when all digits are filled
+                const allFilled = Array.from(inputs).every(input => input.value.length === 1);
+                if (allFilled) {
+                    setTimeout(() => {
+                        verifyOtp();
+                    }, 100);
+                }
+            });
+            
+            input.addEventListener('keydown', function(e) {
+                // Handle backspace - move to previous input
+                if (e.key === 'Backspace' && this.value === '' && index > 0) {
+                    e.preventDefault();
+                    inputs[index - 1].focus();
+                    inputs[index - 1].select();
+                }
+                
+                // Handle paste
+                if ((e.ctrlKey || e.metaKey) && e.key === 'v') {
+                    setTimeout(() => {
+                        handlePaste(this, index, inputs);
+                    }, 10);
+                }
+            });
+            
+            // Prevent default behavior for arrow keys
+            input.addEventListener('keydown', function(e) {
+                if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+
+    function handlePaste(currentInput, currentIndex, allInputs) {
+        navigator.clipboard.readText().then(pastedText => {
+            pastedText = pastedText.replace(/\D/g, '').substring(0, 6);
+            
+            if (pastedText.length === 6) {
+                allInputs.forEach((input, idx) => {
+                    if (idx < pastedText.length) {
+                        input.value = pastedText[idx];
+                    }
+                });
+                
+                // Auto-submit after paste
+                setTimeout(() => {
+                    verifyOtp();
+                }, 100);
+            }
+        }).catch(err => {
+            console.log('Failed to read clipboard: ', err);
+        });
+    }
+
+    async function verifyOtp() {
+        console.log('verifyOtp function called');
+        const inputs = document.querySelectorAll('.otp-digit');
+        const otp = Array.from(inputs).map(input => input.value).join('');
+        const email = document.getElementById('email').value;
+
+        if (otp.length !== 6) {
+            showMessage('warning', 'Please enter all 6 digits');
+            return;
+        }
+
+        const verifyButton = document.querySelector('button[onclick="verifyOtp()"]');
+        const originalButtonText = verifyButton.innerHTML;
+        
+        verifyButton.disabled = true;
+        verifyButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Verifying...';
+
+        try {
+            const response = await fetch('/api/v1/auth/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, otp })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage('success', 'Email verified successfully! Redirecting to login...');
+                setTimeout(() => {
+                    localStorage.removeItem('verifyEmail');
+                    window.location.href = '/login';
+                }, 2000);
+            } else {
+                if (data.detail && data.detail.includes('OTP Re-sent')) {
+                    showMessage('info', 'New OTP sent to your email. Please check and try again.');
+                    // Clear OTP inputs but don't refocus automatically
+                    const inputs = document.querySelectorAll('.otp-digit');
+                    inputs.forEach(input => input.value = '');
+                } else {
+                    showMessage('danger', data.detail || 'Verification failed');
+                    // Clear only on specific errors
+                    const inputs = document.querySelectorAll('.otp-digit');
+                    inputs.forEach(input => input.value = '');
+                    document.getElementById('digit1').focus();
+                }
+            }
+        } catch (error) {
+            showMessage('danger', 'Network error. Please try again.');
+            // Don't clear inputs on network error
+        } finally {
+            verifyButton.disabled = false;
+            verifyButton.innerHTML = originalButtonText;
+        }
+    }
+
+    async function resendOtp() {
+        const email = document.getElementById('email').value;
+        
+        try {
+            const response = await fetch('/api/v1/auth/resend-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showMessage('success', 'New OTP sent to your email');
+                // Clear OTP inputs
+                const inputs = document.querySelectorAll('.otp-digit');
+                inputs.forEach(input => input.value = '');
+                document.getElementById('digit1').focus();
+            } else {
+                showMessage('danger', data.detail || 'Failed to resend OTP');
+            }
+        } catch (error) {
+            showMessage('danger', 'Network error. Please try again.');
+        }
+    }
+
+    // Remove the old moveToNext and autoSubmitOTP functions since we're handling everything with the new event listeners
+</script>
+{% endblock %}

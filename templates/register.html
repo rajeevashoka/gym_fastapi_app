@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="messages"></div>
+<h4 class="text-center mb-4">Create Account</h4>
+<form id="registerForm" onsubmit="registerUser(event)">
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Password</label>
+        <div class="input-group">
+            <input type="password" class="form-control" id="password" required>
+            <span class="input-group-text" onclick="togglePassword('password')">
+                <i class="fas fa-eye"></i>
+            </span>
+        </div>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Gym ID</label>
+        <input type="number" class="form-control" id="gym_id" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" class="form-control" id="phone">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Address</label>
+        <textarea class="form-control" id="address" rows="2"></textarea>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">District</label>
+            <input type="text" class="form-control" id="district">
+        </div>
+        <div class="col-md-6 mb-3">
+            <label class="form-label">State/UT</label>
+            <input type="text" class="form-control" id="state_ut">
+        </div>
+    </div>
+    <div class="mb-4">
+        <label class="form-label">Pincode</label>
+        <input type="text" class="form-control" id="pincode">
+    </div>
+    <button type="submit" class="btn btn-primary w-100 mb-3">Register</button>
+    <div class="text-center">
+        <p>Already have an account? <a href="/login" class="text-decoration-none">Login here</a></p>
+    </div>
+</form>
+
+<script>
+    async function registerUser(event) {
+        event.preventDefault();
+        
+        const userData = {
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value,
+            gym_id: parseInt(document.getElementById('gym_id').value),
+            phone: document.getElementById('phone').value,
+            address: document.getElementById('address').value,
+            district: document.getElementById('district').value,
+            state_ut: document.getElementById('state_ut').value,
+            pincode: document.getElementById('pincode').value
+        };
+
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Registering...';
+
+        try {
+            const response = await fetch('/api/v1/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                // Store email for OTP verification
+                localStorage.setItem('verifyEmail', userData.email);
+                window.location.href = '/verify-otp';
+            } else {
+                showMessage('danger', data.detail || 'Registration failed');
+            }
+        } catch (error) {
+            showMessage('danger', 'Network error. Please try again.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Register';
+        }
+    }
+</script>
+{% endblock %}

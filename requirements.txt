@@ -1,0 +1,36 @@
+fastapi-gym-app/
+│── app/
+│   │── __init__.py
+│   │── main.py                  # Entry point (FastAPI instance, include v1 routers)
+│   │
+│   ├── db/                      # Database related files
+│   │   │── __init__.py
+│   │   │── database.py          # DB connection & Base
+│   │   │── models.py            # SQLAlchemy models (Gym, User)
+│   │   │── schemas.py           # Pydantic schemas
+│   │
+│   ├── utils/                   # Utility helpers
+│   │   │── __init__.py
+│   │   │── otp.py               # OTP generator & email sender
+│   │
+│   ├── core/                    # Core configs & security
+│   │   │── __init__.py
+│   │   │── config.py            # App configs (SECRET_KEY, SMTP, DB URL, etc.)
+│   │   │── security.py          # Password hashing & JWT helpers
+│   │
+│   ├── api/                     # API versioning
+│   │   ├── v1/
+│   │   │   │── __init__.py
+│   │   │   │── auth.py          # Auth routes (register, verify OTP, login)
+│   │   │   │── gyms.py          # Gym-related routes (create, list gyms)
+│   │   │   │── users.py         # User-related routes (profile, list users)
+│   │   │   │── router.py        # Combines all v1 routes
+│
+│── venv/                        # Virtual environment (ignored in git)
+│── gym.db                       # SQLite DB (for dev only)
+│── requirements.txt             # Dependencies
+│── README.md                    # Project documentation
+│── .gitignore                   # Git ignore file
+
+#install "fastapi[standard]"
+#pip install fastapi uvicorn sqlalchemy passlib[bcrypt] pydantic[email] python-jose[cryptography]

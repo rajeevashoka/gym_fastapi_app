@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="messages"></div>
+<h4 class="text-center mb-4">Verify Email</h4>
+<p class="text-center text-muted mb-4">Enter the 6-digit code sent to your email</p>
+
+<form id="verifyForm" onsubmit="verifyOtp(event)">
+    <input type="hidden" id="email" value="{{ email }}">
+    <input type="hidden" id="otp" name="otp">
+    
+    <div class="mb-4">
+        <div class="d-flex justify-content-between">
+            {% for i in range(1, 7) %}
+            <input type="text" class="form-control otp-digit mx-1 text-center" 
+                   maxlength="1" oninput="moveToNext(this, 'digit{{ i+1 }}')" 
+                   onkeyup="autoSubmitOTP()" id="digit{{ i }}" 
+                   style="width: 45px; height: 60px; font-size: 24px;">
+            {% endfor %}
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 mb-3">Verify OTP</button>
+    
+    <div class="text-center">
+        <p>Didn't receive the code? 
+            <a href="#" onclick="resendOtp()" class="text-decoration-none">Resend OTP</a>
+        </p>
+        <p>Wrong email? 
+            <a href="/register" class="text-decoration-none">Go back to registration</a>
+        </p>
+    </div>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const email = localStorage.getItem('verifyEmail') || '';
+        document.getElementById('email').value = email;
+        document.getElementById('digit1').focus();
+    });
+
+    function moveToNext(current, nextFieldId) {
+        if (current.value.length === 1) {
+            document.getElementById(nextFieldId)?.focus();
+        }
+    }
+
+    async function verifyOtp(event) {
+        event.preventDefault();
+        
+        const inputs = document.querySelectorAll('.otp-digit');
+        const otp = Array.from(inputs).map(input => input.value).join('');
+        const email = document.getElementById('email').value;
+        console.log('Verifying OTP for email:', email, 'OTP:', otp);
+
+        if (otp.length !== 6) {
+            showMessage('warning', 'Please enter all 6 digits');
+            return;
+        }
+
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Verifying...';
+
+        try {
+            const response = await fetch('/api/v1/auth/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ email, otp })
+            });
+
+            const data = await response.json();
+            console.log('Verifying Json Response',data);
+            if (response.ok) {
+                showMessage('success', 'Email verified successfully! Redirecting to login...');
+                setTimeout(() => {
+                    localStorage.removeItem('verifyEmail');
+                    window.location.href = '/login';
+                }, 2000);
+            } else {
+                if (data.detail.includes('OTP Re-sent')) {
+                    showMessage('info', 'New OTP sent to your email. Please check and try again.');
+                } else {
+                    showMessage('danger', data.detail || 'Verification failed');
+                }
+            }
+        } catch (error) {
+            showMessage('danger', 'Network error. Please try again.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Verify OTP';
+            
+        }
+    }
+
+    async function resendOtp() {
+    const email = document.getElementById('email').value;
+    
+    try {
+        const response = await fetch('/api/v1/auth/resend-otp', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email: email })  // Send as JSON object
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            showMessage('success', 'New OTP sent to your email');
+        } else {
+            showMessage('danger', data.detail || 'Failed to resend OTP');
+        }
+        } catch (error) {
+            showMessage('danger', 'Network error. Please try again.');
+        }
+    }
+</script>
+{% endblock %}
