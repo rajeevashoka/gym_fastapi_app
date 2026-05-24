@@ -1,0 +1,101 @@
+{% extends "base.html" %} {% block content %}
+<h4 class="text-center mb-4">Gym Account Creation</h4>
+<form id="registerForm" onsubmit="registerGym(event)">
+  <div class="mb-3">
+    <label for="gym_name" class="form-label">Gym Name</label>
+    <input type="text" class="form-control" id="gym_name" required/>
+  </div>
+
+  <div class="mb-3">
+    <label for="prefix" class="form-label">Prefix</label>
+    <input type="text" class="form-control" id="prefix" required/>
+    <small class="form-text text-muted">Unique identifier for your gym (e.g., "fitzone")</small>
+  </div>
+
+  <div class="mb-3">
+    <label for="address" class="form-label">Address</label>
+    <input type="text" class="form-control" id="address" required/>
+  </div>
+
+  <div class="mb-3">
+    <label for="district" class="form-label">District</label>
+    <input type="text" class="form-control" id="district" required/>
+  </div>
+
+  <div class="mb-3">
+    <label for="state_ut" class="form-label">State/UT</label>
+    <input type="text" class="form-control" id="state_ut" required/>
+  </div>
+
+  <div class="mb-3">
+    <label for="pincode" class="form-label">Pincode</label>
+    <input type="text" class="form-control" id="pincode" required/>
+  </div>
+
+  <div class="mb-3">
+    <label for="country" class="form-label">Country</label>
+    <input type="text" class="form-control" id="country" required/>
+  </div>
+
+  <button type="submit" class="btn btn-primary w-100 mb-3">Register Gym</button>
+</form>
+
+<script>
+async function registerGym(event) {
+    event.preventDefault();
+    try {
+        const data = {
+            gym_name: document.getElementById("gym_name").value,
+            prefix: document.getElementById("prefix").value,
+            address: document.getElementById("address").value,
+            district: document.getElementById("district").value,
+            state_ut: document.getElementById("state_ut").value,
+            pincode: document.getElementById("pincode").value,
+            country: document.getElementById("country").value
+        };
+
+        console.log(data);
+
+        const response = await fetch("/api/v1/gyms", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        console.log(result);
+
+        alert("Gym registered successfully!");
+    } catch (error) {
+        console.error("Error registering gym:", error);
+        alert("Failed to register gym. Please try again.");
+    } finally {
+        const submitBtn = event.target.querySelector('button[type="submit"]');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Register Gym';
+    }
+    console.log(data);
+
+    const response = await fetch("/api/v1/gyms", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    console.log(result);
+
+    alert("Gym registered successfully!");
+}
+</script>
+{% endblock %}

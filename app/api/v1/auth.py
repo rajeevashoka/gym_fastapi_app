@@ -8,7 +8,7 @@ from app.utils.otp import generate_otp, send_email_otp, store_otp, verify_otp  #
 
 router = APIRouter()
 
-@router.post("/register", response_model=schemas.User)
+@router.post("/user-register", response_model=schemas.User)
 async def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     # Check if user already exists
     db_user = db.query(models.User).filter(models.User.email == user.email).first()

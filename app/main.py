@@ -9,10 +9,10 @@ from app.core.config import settings
 
 
 # Import all models
-from app.db.models import StateCountry, Pincode, Gym, User, Shift, Attendance
+from app.db.models import Gym, User, Attendance
 
-# Import the init_shifts function
-from app.db.init_data import init_shifts
+# # Import the init_shifts function
+# from app.db.init_data import init_shifts
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -33,16 +33,25 @@ def on_startup():
     Base.metadata.create_all(bind=engine)
     
     # Initialize default shifts using your existing function
-    init_shifts()
+    # init_shifts()
 
 # Your existing routes remain the same
 @app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html",{"request": request})
+
+
+@app.get("/login", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
-@app.get("/register", response_class=HTMLResponse)
+@app.get("/user-register", response_class=HTMLResponse)
 async def register_page(request: Request):
-    return templates.TemplateResponse("register.html", {"request": request})
+    return templates.TemplateResponse("user_registration.html", {"request": request})
+
+@app.get("/gym-register", response_class=HTMLResponse)
+async def gym_register_page(request: Request):
+    return templates.TemplateResponse("gym_registration.html", {"request": request})    
 
 @app.get("/verify-otp", response_class=HTMLResponse)
 async def verify_otp_page(request: Request):

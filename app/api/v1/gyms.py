@@ -8,11 +8,23 @@ router = APIRouter()
 @router.post("/gyms/", response_model=schemas.Gym)
 def create_gym(gym: schemas.GymCreate, db: Session = Depends(get_db)):
     # Generate a unique gymID (you might want to use a more sophisticated method)
-    import uuid
-    gymID = str(uuid.uuid4())[:8].upper()
+    # import uuid
+    # gymID = str(uuid.uuid4())[:8].upper()
+
+    latest_gym = db.query(models.Gym)\
+        .order_by(models.Gym.id.desc())\
+        .first()
+
+    if latest_gym:
+        next_number = latest_gym.id + 1
+    else:
+        next_number = 1
+
+    gymID = f"{gym.prefix.upper()}-{next_number:04d}"
     
     db_gym = models.Gym(
         gym_name=gym.gym_name,
+        prefix=gym.prefix.upper(),
         gymID=gymID,
         address=gym.address,
         district=gym.district,
@@ -20,6 +32,14 @@ def create_gym(gym: schemas.GymCreate, db: Session = Depends(get_db)):
         pincode=gym.pincode,
         country=gym.country
     )
+    existing_gym = db.query(models.Gym).filter(
+        models.Gym.prefix == gym.prefix.upper()).first()
+
+    if existing_gym:
+        raise HTTPException(
+            status_code=400,
+            detail="Prefix already exists"
+            )
     
     db.add(db_gym)
     db.commit()

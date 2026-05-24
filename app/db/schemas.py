@@ -31,6 +31,8 @@ class Pincode(PincodeBase):
 # Gym schemas
 class GymBase(BaseModel):
     gym_name: str
+    prefix: str  # NEW: Prefix for member IDs, e.g. "GYM1"
+    gymID: Optional[str] = None  # NEW: Gym ID, can be auto-generated if not provided
     address: str
     district: str
     state_ut: str

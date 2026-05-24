@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EliteFit Gym - Transform Your Body</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --dark-color: #292f36;
+            --light-color: #f7fff7;
+            --accent-color: #ff6b6b;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .navbar {
+            background-color: var(--dark-color);
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--light-color) !important;
+        }
+        
+        .nav-link {
+            color: var(--light-color) !important;
+            font-weight: 500;
+            margin: 0 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 120px 0;
+            text-align: center;
+        }
+        
+        .hero-section h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        
+        .hero-section p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        .section-title {
+            font-weight: 700;
+            margin-bottom: 50px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background-color: var(--primary-color);
+            bottom: -10px;
+            left: 25%;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .trainer-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .trainer-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .trainer-img {
+            height: 300px;
+            object-fit: cover;
+            width: 100%;
+        }
+        
+        .trainer-info {
+            padding: 20px;
+        }
+        
+        .event-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .event-date {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: 700;
+        }
+        
+        .event-info {
+            padding: 20px;
+        }
+        
+        .testimonial-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .testimonial-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        
+        .contact-info {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            height: 100%;
+        }
+        
+        .contact-icon {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-links h5 {
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+        
+        .social-icons a {
+            color: white;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icons a:hover {
+            color: var(--primary-color);
+            transform: translateY(-3px);
+        }
+        
+        .login-dropdown {
+            padding: 20px;
+            width: 300px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-section p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">EliteFit {{id}}</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#trainers">Trainers</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#events">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">
+                            <i class="fa-solid fa-right-to-bracket"></i> Login
+                        </a>
+                    </li>
+                    <!-- 
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-user"></i> Login
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end login-dropdown" aria-labelledby="navbarDropdown">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="loginEmail" class="form-label">Email address</label>
+                                    <input type="email" class="form-control" id="loginEmail" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="loginPassword" class="form-label">Password</label>
+                                    <input type="password" class="form-control" id="loginPassword" required>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="rememberMe">
+                                    <label class="form-check-label" for="rememberMe">Remember me</label>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">Login</button>
+                                <div class="text-center mt-3">
+                                    <a href="#">Forgot password?</a>
+                                </div>
+                                <hr>
+                                <div class="text-center">
+                                    <p>New member? <a href="#">Register here</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </li>
+                    -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+        <div class="container">
+            <h1>Transform Your Body, Transform Your Life</h1>
+            <p>Join EliteFit Gym and experience world-class training facilities with certified personal trainers to help you achieve your fitness goals.</p>
+            <a href="#membership" class="btn btn-primary btn-lg">Get Started Today</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="py-5" id="features">
+        <div class="container">
+            <h2 class="text-center section-title">Why Choose EliteFit</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-dumbbell"></i>
+                        </div>
+                        <h3>Modern Equipment</h3>
+                        <p>Our gym is equipped with the latest fitness machines and free weights to cater to all your workout needs.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                        <h3>Expert Trainers</h3>
+                        <p>Certified personal trainers with years of experience to guide you through personalized workout plans.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <h3>Flexible Hours</h3>
+                        <p>Open 24/7 to fit your busy schedule. Work out whenever it's convenient for you.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trainers Section -->
+    <section class="py-5 bg-light" id="trainers">
+        <div class="container">
+            <h2 class="text-center section-title">Meet Our Trainers</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="trainer-card">
+                        <img src="https://images.unsplash.com/photo-1551632436-cbf8dd35adfa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1471&q=80" alt="Trainer 1" class="trainer-img">
+                        <div class="trainer-info">
+                            <h4>Michael Johnson</h4>
+                            <p class="text-primary">Strength Training Specialist</p>
+                            <p>With over 10 years of experience, Michael specializes in strength and conditioning programs.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="trainer-card">
+                        <img src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Trainer 2" class="trainer-img">
+                        <div class="trainer-info">
+                            <h4>Sarah Williams</h4>
+                            <p class="text-primary">Yoga & Pilates Instructor</p>
+                            <p>Sarah brings mindfulness and flexibility training with her unique blend of yoga and pilates.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="trainer-card">
+                        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Trainer 3" class="trainer-img">
+                        <div class="trainer-info">
+                            <h4>David Chen</h4>
+                            <p class="text-primary">CrossFit Coach</p>
+                            <p>David is a certified CrossFit Level 3 trainer with multiple competition wins under his belt.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Section -->
+    <section class="py-5" id="events">
+        <div class="container">
+            <h2 class="text-center section-title">Upcoming Events</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <h4>15 JUN</h4>
+                            <p>Saturday, 9:00 AM</p>
+                        </div>
+                        <div class="event-info">
+                            <h4>Summer Body Challenge</h4>
+                            <p>Join our 6-week transformation challenge with prizes for the best results!</p>
+                            <a href="#" class="btn btn-primary">Register Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <h4>22 JUN</h4>
+                            <p>Saturday, 7:00 AM</p>
+                        </div>
+                        <div class="event-info">
+                            <h4>Community Marathon</h4>
+                            <p>5K/10K run through the city with all fitness levels welcome.</p>
+                            <a href="#" class="btn btn-primary">Register Now</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <h4>30 JUN</h4>
+                            <p>Sunday, 10:00 AM</p>
+                        </div>
+                        <div class="event-info">
+                            <h4>Nutrition Workshop</h4>
+                            <p>Learn about meal planning and nutrition from our expert dietitian.</p>
+                            <a href="#" class="btn btn-primary">Register Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="#" class="btn btn-outline-primary">View All Events</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center section-title">Success Stories</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="Testimonial 1" class="testimonial-img mx-auto d-block">
+                        <div class="text-center">
+                            <h4>Lisa Thompson</h4>
+                            <p class="text-primary">Lost 25kg in 6 months</p>
+                        </div>
+                        <p class="text-center">"EliteFit changed my life! The trainers were so supportive and the community kept me motivated. I've never felt better!"</p>
+                        <div class="text-center text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="Testimonial 2" class="testimonial-img mx-auto d-block">
+                        <div class="text-center">
+                            <h4>Robert Garcia</h4>
+                            <p class="text-primary">Gained 8kg muscle</p>
+                        </div>
+                        <p class="text-center">"The personalized training program helped me achieve my muscle gain goals faster than I thought possible. Highly recommend!"</p>
+                        <div class="text-center text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="testimonial-card">
+                        <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Testimonial 3" class="testimonial-img mx-auto d-block">
+                        <div class="text-center">
+                            <h4>Emma Wilson</h4>
+                            <p class="text-primary">Ran first marathon</p>
+                        </div>
+                        <p class="text-center">"The training program and support from EliteFit helped me complete my first marathon. Couldn't have done it without them!"</p>
+                        <div class="text-center text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-5" id="contact">
+        <div class="container">
+            <h2 class="text-center section-title">Contact Us</h2>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="contact-info">
+                        <h3 class="mb-4">Get In Touch</h3>
+                        <div class="mb-4">
+                            <p><i class="fas fa-map-marker-alt contact-icon"></i> 123 Fitness Street, Health City, HC 12345</p>
+                        </div>
+                        <div class="mb-4">
+                            <p><i class="fas fa-phone contact-icon"></i> (123) 456-7890</p>
+                        </div>
+                        <div class="mb-4">
+                            <p><i class="fas fa-envelope contact-icon"></i> info@elitefitgym.com</p>
+                        </div>
+                        <div class="mb-4">
+                            <p><i class="fas fa-clock contact-icon"></i> Open 24/7</p>
+                        </div>
+                        <div class="social-icons mt-4">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <form>
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="subject" class="form-label">Subject</label>
+                            <input type="text" class="form-control" id="subject" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="message" class="form-label">Message</label>
+                            <textarea class="form-control" id="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="footer-links">
+                        <h5>EliteFit</h5>
+                        <p>Your premier destination for fitness and wellness. We're committed to helping you achieve your health goals in a supportive community environment.</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="footer-links">
+                        <h5>Quick Links</h5>
+                        <ul>
+                            <li><a href="#home">Home</a></li>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#trainers">Trainers</a></li>
+                            <li><a href="#events">Events</a></li>
+                            <li><a href="#contact">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="footer-links">
+                        <h5>Services</h5>
+                        <ul>
+                            <li><a href="#">Personal Training</a></li>
+                            <li><a href="#">Group Classes</a></li>
+                            <li><a href="#">Nutrition Counseling</a></li>
+                            <li><a href="#">Physical Therapy</a></li>
+                            <li><a href="#">Yoga & Pilates</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="footer-links">
+                        <h5>Newsletter</h5>
+                        <p>Subscribe to our newsletter for the latest updates and offers.</p>
+                        <form class="mt-3">
+                            <div class="input-group mb-3">
+                                <input type="email" class="form-control" placeholder="Your Email" aria-label="Your Email">
+                                <button class="btn btn-primary" type="button">Subscribe</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-4" style="background-color: #495057;">
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2023 EliteFit Gym. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-white me-3">Privacy Policy</a>
+                    <a href="#" class="text-white">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
